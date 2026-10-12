@@ -1,0 +1,35 @@
+# Base44 dev environment for the "Clone in VS Code" browser extension.
+#
+# The extension itself has no runtime: it is plain HTML/JS loaded by a browser,
+# with no package manager, build step, database or external service. The sandbox
+# preview still needs something on port 3000, so this one service runs a
+# dependency-free static dev server (devpreview/server.mjs) that serves the repo
+# and lets the extension's real scripts run in the preview page.
+#
+# The repo is bind-mounted, so edits show up without rebuilding anything.
+services:
+  preview:
+    image: node:22
+    working_dir: /workspace
+    command: ["node", "devpreview/server.mjs"]
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      # Supplied by the platform for sandbox preview runs (informational here).
+      - BASE44_PREVIEW_MODE
+    volumes:
+      - ./:/workspace
+    restart: on-failure
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 5s

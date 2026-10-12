@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clone in VS Code — extension preview</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --surface: #f6f7f9;
+        --border: #d8dbe0;
+        --ink: #1b1d21;
+        --muted: #5c6370;
+        --accent: #0a66c2;
+        --ok: #146c43;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121212;
+          --surface: #1c1d20;
+          --border: #34363b;
+          --ink: #f1f2f4;
+          --muted: #a2a7b0;
+          --accent: #6cb2f7;
+          --ok: #7ee2a8;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px 20px 40px;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+        line-height: 1.5;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      header img {
+        border-radius: 6px;
+      }
+      h1 {
+        font-size: 1.35rem;
+        margin: 0;
+      }
+      header p {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .lede {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin: 14px 0 20px;
+      }
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 16px;
+        align-items: start;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px;
+        min-width: 0;
+      }
+      .card h2 {
+        font-size: 0.95rem;
+        margin: 0 0 6px;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin: 0 0 12px;
+      }
+      iframe {
+        width: 100%;
+        height: 250px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+      }
+      label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      input[type="url"] {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        background: var(--bg);
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.85rem;
+      }
+      button {
+        margin-top: 10px;
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 7px;
+        background: var(--accent);
+        color: #fff;
+        font: inherit;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+      button:hover {
+        filter: brightness(1.08);
+      }
+      .settings {
+        margin: 12px 0 0;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .result {
+        margin: 10px 0 0;
+        padding: 10px;
+        border: 1px dashed var(--border);
+        border-radius: 7px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.78rem;
+        word-break: break-all;
+        color: var(--muted);
+      }
+      .result.opened {
+        border-style: solid;
+        color: var(--ok);
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.85em;
+      }
+      footer {
+        margin-top: 22px;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+      footer p {
+        margin: 4px 0;
+      }
+      @media (max-width: 720px) {
+        main {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        iframe {
+          height: 290px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <img src="/icons/48.png" alt="" width="34" height="34" />
+        <div>
+          <h1>Clone in VS Code</h1>
+          <p>Extension preview — runs the extension's real scripts</p>
+        </div>
+      </header>
+
+      <p class="lede">
+        A browser extension has nothing of its own to serve, so this page runs the extension's real
+        <code>options.js</code> and <code>background.js</code> against a stand-in for the browser's
+        extension APIs. Nothing on this page ships with the extension.
+      </p>
+
+      <main>
+        <section class="card">
+          <h2>Options page</h2>
+          <p class="hint">
+            The real <code>options.html</code>. Change something here and save, then click the
+            action on the right.
+          </p>
+          <iframe id="options-frame" src="/options.html" title="Extension options page"></iframe>
+        </section>
+
+        <section class="card">
+          <h2>Toolbar action</h2>
+          <p class="hint">
+            On a GitHub, GitLab or Bitbucket repository page the extension opens your editor. Pick
+            such a page and click the extension.
+          </p>
+          <label for="repo-url">Repository page</label>
+          <input
+            id="repo-url"
+            type="url"
+            spellcheck="false"
+            value="https://github.com/infinitepower18/CloneInVSCode"
+          />
+          <button id="run">Click the extension</button>
+          <p class="settings">Settings in use: <span id="settings">reading…</span></p>
+          <div id="result" class="result" role="status">Nothing clicked yet.</div>
+        </section>
+      </main>
+
+      <footer>
+        <p>
+          To run the real extension: <code>chrome://extensions</code> → Developer mode → Load
+          unpacked (this folder), or in Firefox <code>about:debugging#/runtime/this-firefox</code> →
+          Load Temporary Add-on → <code>manifest-ff.json</code>.
+        </p>
+        <p id="reload-note">Edits to the extension source reload this preview automatically.</p>
+      </footer>
+    </div>
+
+    <script src="/devpreview/chrome-shim.js"></script>
+    <script src="/background.js"></script>
+    <script>
+      (function () {
+        var shim = window.__devpreviewShim;
+        var repoInput = document.getElementById("repo-url");
+        var runButton = document.getElementById("run");
+        var result = document.getElementById("result");
+        var settings = document.getElementById("settings");
+
+        function renderSettings() {
+          chrome.storage.sync.get(
+            { protocol: "HTTPS", application: "VS Code", urlScheme: "" },
+            function (items) {
+              settings.textContent =
+                items.protocol +
+                " · " +
+                items.application +
+                (items.application === "Other" ? " (" + (items.urlScheme || "no scheme yet") + ")" : "");
+            }
+          );
+        }
+
+        // Drives the click handler registered by the real background.js.
+        function clickExtension() {
+          shim.currentTabUrl = repoInput.value.trim();
+          shim.lastOpened = null;
+
+          var handler = shim.clickHandlers[shim.clickHandlers.length - 1];
+          if (!handler) {
+            result.classList.remove("opened");
+            result.textContent = "The background script did not register a click handler.";
+            return;
+          }
+
+          try {
+            handler({ id: 1, active: true, url: shim.currentTabUrl });
+          } catch (error) {
+            result.classList.remove("opened");
+            result.textContent = "The background script threw: " + error.message;
+            return;
+          }
+
+          if (shim.lastOpened) {
+            result.classList.add("opened");
+            result.textContent = shim.lastOpened;
+          } else {
+            result.classList.remove("opened");
+            result.textContent =
+              "Nothing opened — the extension only acts on a repository page like github.com/owner/repo.";
+          }
+        }
+
+        runButton.addEventListener("click", clickExtension);
+        window.addEventListener("storage", renderSettings);
+        renderSettings();
+
+        // Live reload: the dev server bumps a digest whenever a source file changes.
+        var current = null;
+        setInterval(function () {
+          fetch("/__devpreview/version", { cache: "no-store" })
+            .then(function (response) {
+              return response.text();
+            })
+            .then(function (version) {
+              if (current === null) current = version;
+              else if (version !== current) window.location.reload();
+            })
+            .catch(function () {});
+        }, 1200);
+      })();
+    </script>
+  </body>
+</html>
